@@ -1,29 +1,30 @@
 let currentCapital = 0;
 let targetCapital = 0;
+let startingCapital = 0; // Added to track the initial capital
 let timeframe = 30;
 let dailyTarget = 0;
 
 function setChallenge() {
-    const startCapital = parseInt(document.getElementById('startCapital').value);
+    startingCapital = parseInt(document.getElementById('startCapital').value);
     targetCapital = parseInt(document.getElementById('targetCapital').value);
     timeframe = parseInt(document.getElementById('timeframe').value);
     const maxRisk = parseInt(document.getElementById('maxRisk').value);
 
-    currentCapital = startCapital;
-    dailyTarget = (targetCapital - startCapital) / timeframe;
+    currentCapital = startingCapital; // Set current to starting value
+    dailyTarget = (targetCapital - startingCapital) / timeframe;
     updateDisplay();
     closeChallengeForm();
 }
 
 function updateDisplay() {
-    document.getElementById('starting').textContent = currentCapital;
+    document.getElementById('starting').textContent = startingCapital;
     document.getElementById('current').textContent = currentCapital;
     document.getElementById('target').textContent = targetCapital;
     document.getElementById('dailyTarget').textContent = dailyTarget.toFixed(2);
-    const progress = ((currentCapital - document.getElementById('starting').textContent) / (targetCapital - currentCapital) * 100) || 0;
-    document.getElementById('circleText').textContent = `${progress.toFixed(0)}%`;
-    document.getElementById('circleFill').style.background = `conic-gradient(#32cd32 0%, #32cd32 ${progress}%, #1a001a ${progress}%)`;
-    document.getElementById('dailyProgress').textContent = `${progress.toFixed(0)}% Complete`;
+    const progress = ((currentCapital - startingCapital) / (targetCapital - startingCapital) * 100) || 0;
+    document.getElementById('circleText').textContent = `${Math.min(progress, 100).toFixed(0)}%`; // Cap at 100%
+    document.getElementById('circleFill').style.background = `conic-gradient(#32cd32 0%, #32cd32 ${Math.min(progress, 100)}%, #1a001a ${Math.min(progress, 100)}%)`;
+    document.getElementById('dailyProgress').textContent = `${Math.min(progress, 100).toFixed(0)}% Complete`;
 }
 
 function addProfit() {
