@@ -1,0 +1,91 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Challenge</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Trading Challenge</h1>
+        <div class="progress-circle">
+            <div class="circle-fill" id="circleFill"></div>
+            <div class="circle-text" id="circleText">0%</div>
+        </div>
+        <div class="progress-bar">
+            <span>Starting: ₹<span id="starting">0</span></span>
+            <span>Current: ₹<span id="current">0</span></span>
+            <span>Target: ₹<span id="target">0</span></span>
+        </div>
+        <div class="daily-target">Daily Target: ₹<span id="dailyTarget">0</span>/day <span id="dailyProgress">0% Complete</span></div>
+        <div class="stats">
+            <p>Win Rate: <span id="winRate">0%</span></p>
+            <p>Today: +₹<span id="today">0</span></p>
+        </div>
+        <input type="number" id="profitInput" placeholder="Enter today's profit (₹)" min="0">
+        <button onclick="addProfit()">Add Profit</button>
+        <button onclick="openChallengeForm()">Set Challenge</button>
+    </div>
+
+    <div id="challengeForm" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeChallengeForm()">×</span>
+            <h2>Set Trading Challenge</h2>
+            <label>Starting Capital: ₹<input type="number" id="startCapital" min="0" value="100000"></label>
+            <label>Target Capital: ₹<input type="number" id="targetCapital" min="0" value="250000"></label>
+            <label>Timeframe:
+                <select id="timeframe">
+                    <option value="30">1 Month</option>
+                    <option value="90">3 Months</option>
+                    <option value="180">6 Months</option>
+                </select>
+            </label>
+            <label>Max Risk Per Trade (%): <input type="number" id="maxRisk" min="0" max="100" value="2"></label>
+            <button onclick="setChallenge()">Set Challenge</button>
+            <button onclick="closeChallengeForm()">Cancel</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
