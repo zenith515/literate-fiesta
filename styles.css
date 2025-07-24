@@ -1,0 +1,133 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a001a, #2a0040);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from { box-shadow: 0 0 10px #8a2be2; }
+    to { box-shadow: 0 0 20px #ba55d3, 0 0 30px #8a2be2; }
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    box-shadow: 0 0 15px #8a2be2;
+}
+
+h1 {
+    color: #ba55d3;
+    text-shadow: 0 0 5px #8a2be2;
+}
+
+.progress-circle {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+}
+
+.circle-fill {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: conic-gradient(#32cd32 0%, #32cd32 0%, #1a001a 0%);
+    position: absolute;
+    transform: rotate(-90deg);
+}
+
+.circle-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: #32cd32;
+}
+
+.progress-bar {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    background: #333;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 0 5px #8a2be2;
+}
+
+.daily-target, .stats {
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+input, button {
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+}
+
+#profitInput {
+    background: #fff;
+    color: #1a001a;
+}
+
+button {
+    background: #ba55d3;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #8a2be2;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background: #1a001a;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: left;
+    box-shadow: 0 0 10px #8a2be2;
+}
+
+.modal-content label {
+    display: block;
+    margin: 10px 0;
+}
+
+.modal-content input, .modal-content select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #8a2be2;
+    border-radius: 5px;
+    background: #fff;
+    color: #1a001a;
+}
+
+.modal-content button {
+    width: 45%;
+}
